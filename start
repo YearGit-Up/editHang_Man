@@ -1,0 +1,175 @@
+#Team 4: Grant, Agustin, Diamond, Isaiah
+#The original script was mainly a prototype from youtube
+
+#What did it do well, what should it do differently?
+#My pycharm wont run if I save it but it will run on app and it's really frustrating.
+#Plus I prefer working alone next time.
+
+#What innovations did you hope to add to the script? I wanted to make it like wheel of fortunes where you get categories
+
+#Describe what should be the user experience: Easy to use, a little bit of interactive
+
+word_list = [ # this is the word list
+    'Deliverable',
+    'Infraction',
+    'Sequel',
+    'Python',
+    'Empowered',
+    'Professional',
+    'Internship',
+    'Contract',
+    'Analytics']
+
+
+import random                         #This function will choose random words from the list
+from words import word_list           #Using thins, the words will import from the file words.py
+
+
+def get_word():
+    word = random.choice(word_list)
+    return word.upper()               #word.upper will make letters uppercase as a result even if you type lowercase
+
+
+def play(word):                        #This is where code for the game starts
+    word_completion = "_" * len(word)  #Creating a variable that will show '_' if its the word is guessed incorrectly
+    guessed = False                    #If the guess is true, the len(length) of the words
+    guessed_letters = []               #This variable will show the letters that are guessed
+    guessed_words = []                 #While this variable will only work if you guessed the complete word correctly
+    tries = 6                          #This indicates the amount of tries you can and its related to display_hangman
+
+    print("")
+    print('Hangman Year Up Edition!!')
+    print("My name is Grant and I'm part of Team 4")
+    print('Most words are Year Up related')
+    print('For example: Empowered,Professionalism, or Infraction')
+    print('Now try your best and have some fun')
+
+    print(display_hangman(tries))      #Using print function, it will show the ascii art I got from github
+    print(word_completion)             #Going back to the created variable, using print will display the result in txt
+    print("\n")                        # \n means newline. This will create a space between, after the word completion
+    while not guessed and tries > 0:   #This while loop will make the game keep going until the tries are less than 0
+        guess = input("Please guess a letter or word: ").upper()
+        if len(guess) == 1 and guess.isalpha(): #The isalpha methods returns 'True' if all characters in the string are alphabets, Otherwise, It returns 'False'
+            if guess in guessed_letters:   #If the letter is already guessed, then it will print the next line
+                print("You already guessed the letter", guess)
+            elif guess not in word:        #If the letter is not in the word, then it will print 'is not in the word'
+                print(guess, "is not in the word.")
+                tries -= 1                 #Every missed guess will subtract the tries by -1 and we have 6 tries in total
+                guessed_letters.append(guess)
+            else:
+                print("Nice job,", guess, "is in the word!") #When you guessed a letter right, this line statement will print
+                guessed_letters.append(guess)
+                word_as_list = list(word_completion)
+                indices = [i for i, letter in enumerate(word) if letter == guess]
+                for index in indices:
+                    word_as_list[index] = guess #In this part, if the letter is guessed correctly, it will replace the "_" into guessed letter using the guess variable.
+                word_completion = "".join(word_as_list)
+                if "_" not in word_completion:
+                    guessed = True
+        elif len(guess) == len(word) and guess.isalpha():
+            if guess in guessed_words:
+                print("You already guessed the word", guess)
+            elif guess != word:
+                print(guess, "is not the word.")
+                tries -= 1
+                guessed_words.append(guess)
+            else:
+                guessed = True
+                word_completion = word
+                #The code above is repetition of using if and else function.
+        else:
+            print("invalid guess.")
+        print(display_hangman(tries))
+        print(word_completion)
+        print("\n")
+    if guessed:         #If you guessed all the words, it will print the 'if' function but if you run out of tries, the 'else' statement will display hangman and print the else statement
+        print("Congrats, you guessed the word! You win!")
+    else:
+        print("Sorry, you ran out of tries. The word was " + word + ". Maybe next time!") #If you ran out of tries, the right word will show up and will ask if you want to play again.
+
+#This display hangman is from github.
+def display_hangman(tries):
+    stages = [  # final state: head, body, both arms, and both legs
+                """
+                   --------
+                   |      |
+                   |      O
+                   |     \\|/
+                   |      |
+                   |     / \\
+                   -
+                """,
+                # head, body, both arms, and one leg
+                """
+                   --------
+                   |      |
+                   |      O
+                   |     \\|/
+                   |      |
+                   |     /
+                   -
+                """,
+                # head, body, and both arms
+                """
+                   --------
+                   |      |
+                   |      O
+                   |     \\|/
+                   |      |
+                   |
+                   -
+                """,
+                # head, body, and one arm
+                """
+                   --------
+                   |      |
+                   |      O
+                   |     \\|
+                   |      |
+                   |
+                   -
+                """,
+                # head and body
+                """
+                   --------
+                   |      |
+                   |      O
+                   |      |
+                   |      |
+                   |
+                   -
+                """,
+                # head
+                """
+                   --------
+                   |      |
+                   |      O
+                   |
+                   |
+                   |
+                   -
+                """,
+                # initial empty state
+                """
+                   --------
+                   |      |
+                   |
+                   |
+                   |
+                   |
+                   -
+                """
+    ]
+    return stages[tries]
+
+
+def main():                         #Now in this part, its using the while loop to give a player an option to play again by answering the question
+    word = get_word()
+    play(word)
+    while input("Play Again? (Y/N) ").upper() == "Y":
+        word = get_word()
+        play(word)
+
+
+if __name__ == "__main__": #This code fragment helps the program to keep running on the command line.
+    main()
